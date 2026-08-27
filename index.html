@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instruct-to-Act: Decoupling Planning and Control for Instructable Agents</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f8f9fa;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    header {
+      text-align: center;
+      padding: 40px 0 30px;
+      border-bottom: 2px solid #e9ecef;
+      margin-bottom: 40px;
+    }
+    h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .subtitle {
+      font-size: 1.3em;
+      color: #495057;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    /* Authors - compact two-line vertical layout */
+    .authors {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px 30px;
+      margin: 20px auto 0;
+      max-width: 900px;
+      color: #343a40;
+    }
+    .author-item {
+      text-align: center;
+      flex: 0 1 auto;
+      min-width: 180px;
+    }
+    .author-name { 
+      font-weight: 600; 
+      color: #1a1a1a;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .author-affil { 
+      color: #6c757d; 
+      font-size: 0.88em;
+      line-height: 1.3;
+      margin-bottom: 3px;
+    }
+    .author-email {
+      font-size: 0.85em;
+      margin-top: 2px;
+    }
+    .author-email a {
+      color: #495057;
+      text-decoration: none;
+      border-bottom: 1px dashed #ced4da;
+    }
+    .author-email a:hover {
+      color: #1a1a1a;
+      border-bottom-color: #adb5bd;
+    }
+
+    .venue {
+      font-style: italic;
+      color: #868e96;
+      margin: 10px 0;
+    }
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 25px;
+    }
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: #495057;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+    .link-button:hover { background: #343a40; }
+    .link-button.secondary { background: #6c757d; }
+    .link-button.secondary:hover { background: #545b62; }
+
+    section { margin-bottom: 50px; }
+    h2 {
+      font-size: 2em;
+      color: #1a1a1a;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e9ecef;
+    }
+    h3 {
+      font-size: 1.4em;
+      color: #343a40;
+      margin: 25px 0 15px;
+    }
+    .abstract {
+      font-size: 1.05em;
+      line-height: 1.8;
+      text-align: justify;
+      color: #495057;
+    }
+
+    /* Figure: centered at 60% width */
+    .figure-image {
+      width: 60%;
+      margin: 30px auto;
+      display: block;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .method-list { list-style: none; padding: 0; }
+    .method-list li {
+      padding: 15px 0;
+      padding-left: 30px;
+      position: relative;
+      line-height: 1.7;
+    }
+    .method-list li:before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: #495057;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 30px 0;
+      font-size: 0.95em;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #dee2e6;
+    }
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #495057;
+    }
+    tr:nth-child(even) { background: #f8f9fa; }
+    .highlight-row { background: #e9ecef !important; font-weight: 600; }
+
+    .contribution-box {
+      background: #f8f9fa;
+      border-left: 4px solid #495057;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .contribution-box ul { margin-left: 20px; margin-top: 10px; }
+    .contribution-box li { margin: 8px 0; }
+
+    .citation-box {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      overflow-x: auto;
+    }
+    .citation-box pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    footer {
+      text-align: center;
+      padding: 30px 0;
+      color: #868e96;
+      border-top: 2px solid #e9ecef;
+      margin-top: 60px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8em; }
+      .subtitle { font-size: 1.1em; }
+      .links { flex-direction: column; align-items: center; }
+      table { font-size: 0.85em; }
+
+      /* Figure full width on phones */
+      .figure-image { width: 100%; }
+
+      /* Single column authors on mobile */
+      .authors { 
+        flex-direction: column; 
+        align-items: center;
+        gap: 15px;
+      }
+      .author-item { min-width: 200px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Decoupling Planning and Control for Instructable Agents</h1>
+      <p class="subtitle">Instruct-to-Act</p>
+
+      <div class="authors" role="list" aria-label="Author list">
+        <div class="author-item" role="listitem">
+          <div class="author-name">Zineng Tang</div>
+          <div class="author-affil">UC Berkeley</div>
+          <div class="author-email"><a href="mailto:terran@berkeley.edu">terran@berkeley.edu</a></div>
+        </div>
+        <div class="author-item" role="listitem">
+          <div class="author-name">Kelsey R. Allen</div>
+          <div class="author-affil">Vector Institute<br/><em>(Work done at Google DeepMind)</em></div>
+          <div class="author-email"><a href="mailto:kelsey.allen@vectorinstitute.ai">kelsey.allen@vectorinstitute.ai</a></div>
+        </div>
+        <div class="author-item" role="listitem">
+          <div class="author-name">Sjoerd van Steenkiste</div>
+          <div class="author-affil">Google DeepMind</div>
+          <div class="author-email"><a href="mailto:svansteenkiste@google.com">svansteenkiste@google.com</a></div>
+        </div>
+        <div class="author-item" role="listitem">
+          <div class="author-name">Ishita Dasgupta</div>
+          <div class="author-affil">Google DeepMind</div>
+          <div class="author-email"><a href="mailto:idg@google.com">idg@google.com</a></div>
+        </div>
+        <div class="author-item" role="listitem">
+          <div class="author-name">Alane Suhr</div>
+          <div class="author-affil">UC Berkeley</div>
+          <div class="author-email"><a href="mailto:suhr@berkeley.edu">suhr@berkeley.edu</a></div>
+        </div>
+      </div>
+
+      <div class="links">
+        <a href="#" class="link-button"><span>📄</span> Paper (arXiv)</a>
+        <a href="https://github.com/zinengtang/instruct-to-act-code" class="link-button"><span>💻</span> Code (GitHub)</a>
+        <a href="https://github.com/zinengtang/instruct-to-act-code#interactive-demo" class="link-button secondary"><span>🎮</span> Demo</a>
+      </div>
+    </header>
+
+    <section id="abstract">
+      <h2>Abstract</h2>
+      <p class="abstract">
+        Recent work on vision-language(-action) agents shows that VLMs are strong at high-level reasoning but struggle to realize plans as reliable low-latency action sequences, while world-model controllers excel at fast observation-to-action control but lack open-ended task guidance. In this work, we combine these strengths by conditioning a learned world-model controller on language so that it can act autonomously at high frequency conditioned on sparse, higher-latency textual instructions generated by vision-language models (VLMs). Our system, <strong>Instruct-to-Act</strong>, includes an instructable controller that autoregressively generates high-frequency actions and can either follow language instructions from an instruction agent, or self-operate in a high-throughput environment.
+      </p>
+      <br/>
+      <p class="abstract">
+        To train controllers to be language-instructable, we relabel segments of controller policy rollouts with instructions and optimize a behavior-cloning objective. Our framework easily supports extension to multi-agent settings that enable agent communication between VLMs using trained controllers as actuators without relying on Multi-Agent Reinforcement Learning algorithms. We report results on various embodied environments and tasks, scaling trends with larger controllers and VLMs, and ablations on instruction cadence, planning frequency, and online vs. offline planning latency. The results show that with our decoupled architecture, Instruct-to-Act can flexibly switch to different VLMs and scale well to multi-agents and longer chains of reasoning achieving state-of-the-art performance on six tasks.
+      </p>
+    </section>
+
+    <section id="method">
+      <h2>Method Overview</h2>
+
+      <img src="asset/fig1_inference.png" alt="Instruct-to-Act system architecture diagram" class="figure-image"/>
+
+      <h3>Key Approach</h3>
+      <ul class="method-list">
+        <li><strong>Decoupled Architecture:</strong> Separate high-level planning (VLM) from low-level control (trained world model), enabling real-time execution with sophisticated reasoning</li>
+        <li><strong>Language-Conditioned Controller:</strong> Train environment-specific controllers based on Dreamer (world-model RL) that can follow natural language instructions</li>
+        <li><strong>Post-hoc Instruction Supervision:</strong> Automatically annotate replay buffer segments with language descriptions using VLMs, enabling behavior cloning without manual labeling</li>
+        <li><strong>Asynchronous Online Planning:</strong> VLM planners continuously reason in the background while controllers execute actions, dramatically reducing latency</li>
+        <li><strong>Multi-Agent Extension:</strong> Scale to multiple agents with parameter-shared controllers and language-based coordination, no specialized MARL algorithms needed</li>
+      </ul>
+
+      <div class="contribution-box">
+        <h3>Main Contributions</h3>
+        <ul>
+          <li>Formulate instructable, real-time control as language-conditioned world-model RL with autonomous base policy</li>
+          <li>Propose post-hoc language annotation pipeline that densifies instruction labels without interrupting training</li>
+          <li>Extend to multi-agent cooperation via shared controllers and language-level coordination</li>
+          <li>Comprehensive scaling study on controller capacity, planner capacity, planning cadence, and efficiency</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="citation">
+      <h2>Citation</h2>
+      <p>If you find this work useful, please consider citing:</p>
+      <div class="citation-box">
+<pre>@inproceedings{tang2026instructtoact,
+  title     = {Decoupling Planning and Control for Instructable Agents},
+  author    = {Tang, Zineng and Allen, Kelsey R. and van Steenkiste, Sjoerd
+               and Dasgupta, Ishita and Suhr, Alane},
+  booktitle = {Conference on Language Modeling (COLM)},
+  year      = {2026}
+}</pre>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
