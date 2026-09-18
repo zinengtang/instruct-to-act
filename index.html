@@ -39,20 +39,20 @@
       margin-bottom: 20px;
     }
 
-    /* Authors - compact two-line vertical layout */
+    /* Authors - single row */
     .authors {
       display: flex;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px 30px;
+      flex-wrap: nowrap;
+      gap: 10px 18px;
       margin: 20px auto 0;
-      max-width: 900px;
+      max-width: 1200px;
       color: #343a40;
     }
     .author-item {
       text-align: center;
-      flex: 0 1 auto;
-      min-width: 180px;
+      flex: 1 1 0;
+      min-width: 0;
     }
     .author-name { 
       font-weight: 600; 
@@ -217,6 +217,7 @@
       /* Single column authors on mobile */
       .authors { 
         flex-direction: column; 
+        flex-wrap: wrap;
         align-items: center;
         gap: 15px;
       }
@@ -259,9 +260,8 @@
       </div>
 
       <div class="links">
-        <a href="#" class="link-button"><span>📄</span> Paper (arXiv)</a>
+        <a href="https://arxiv.org/abs/2608.26788" class="link-button"><span>📄</span> Paper (arXiv)</a>
         <a href="https://github.com/zinengtang/instruct-to-act-code" class="link-button"><span>💻</span> Code (GitHub)</a>
-        <a href="https://github.com/zinengtang/instruct-to-act-code#interactive-demo" class="link-button secondary"><span>🎮</span> Demo</a>
       </div>
     </header>
 
@@ -289,16 +289,6 @@
         <li><strong>Asynchronous Online Planning:</strong> VLM planners continuously reason in the background while controllers execute actions, dramatically reducing latency</li>
         <li><strong>Multi-Agent Extension:</strong> Scale to multiple agents with parameter-shared controllers and language-based coordination, no specialized MARL algorithms needed</li>
       </ul>
-
-      <div class="contribution-box">
-        <h3>Main Contributions</h3>
-        <ul>
-          <li>Formulate instructable, real-time control as language-conditioned world-model RL with autonomous base policy</li>
-          <li>Propose post-hoc language annotation pipeline that densifies instruction labels without interrupting training</li>
-          <li>Extend to multi-agent cooperation via shared controllers and language-level coordination</li>
-          <li>Comprehensive scaling study on controller capacity, planner capacity, planning cadence, and efficiency</li>
-        </ul>
-      </div>
     </section>
 
     <section id="citation">
