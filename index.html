@@ -138,20 +138,27 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    /* Demo */
-    .demo-wrap { text-align: center; margin: 10px 0 0; }
-    .demo-gif {
-      width: 70%;
-      max-width: 720px;
+    /* Example rollouts */
+    .rollouts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 10px;
+    }
+    .rollout { margin: 0; }
+    .rollout video {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: block;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      image-rendering: pixelated;
+      background: #fff;
     }
-    .demo-caption {
+    .rollout figcaption {
       color: #6c757d;
-      font-size: 0.95em;
-      margin: 12px auto 0;
-      max-width: 760px;
+      font-size: 0.92em;
+      margin-top: 10px;
+      line-height: 1.5;
     }
 
     .method-list { list-style: none; padding: 0; }
@@ -230,7 +237,7 @@
 
       /* Figure full width on phones */
       .figure-image { width: 100%; }
-      .demo-gif { width: 100%; }
+      .rollouts { grid-template-columns: 1fr; }
 
       /* Single column authors on mobile */
       .authors { 
@@ -310,10 +317,22 @@
     </section>
 
     <section id="example">
-      <h2>Example Rollout</h2>
-      <div class="demo-wrap">
-        <img src="asset/demo_picopark.gif" alt="Two agents solving a Pico Park level with Instruct-to-Act" class="demo-gif"/>
-        <p class="demo-caption">Two agents in Pico Park. The text at the bottom is the instruction the VLM planner currently sends to the controller; the controller acts on it until it signals completion, then the planner sends the next one.</p>
+      <h2>Example Rollouts</h2>
+      <div class="rollouts">
+        <figure class="rollout">
+          <video poster="asset/rollout_picopark_a_poster.jpg" autoplay loop muted playsinline preload="metadata">
+            <source src="asset/rollout_picopark_a.webm" type="video/webm"/>
+            <source src="asset/rollout_picopark_a.mp4" type="video/mp4"/>
+          </video>
+          <figcaption>Pico Park, two agents. The planner gives joint instructions; the controller executes them until it signals completion.</figcaption>
+        </figure>
+        <figure class="rollout">
+          <video poster="asset/rollout_picopark_b_poster.jpg" autoplay loop muted playsinline preload="metadata">
+            <source src="asset/rollout_picopark_b.webm" type="video/webm"/>
+            <source src="asset/rollout_picopark_b.mp4" type="video/mp4"/>
+          </video>
+          <figcaption>Pico Park, two agents with separate instructions for each agent (BLUE / RED), through two levels.</figcaption>
+        </figure>
       </div>
     </section>
 
