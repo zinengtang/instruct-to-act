@@ -138,6 +138,44 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
+    /* Demo */
+    .demo-wrap { text-align: center; margin: 10px 0 0; }
+    .demo-gif {
+      width: 70%;
+      max-width: 720px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      image-rendering: pixelated;
+    }
+    .demo-caption {
+      color: #6c757d;
+      font-size: 0.95em;
+      margin: 12px auto 0;
+      max-width: 760px;
+    }
+    .demo-steps {
+      list-style: none;
+      counter-reset: step;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 20px 0 0;
+      padding: 0;
+    }
+    .demo-steps li {
+      counter-increment: step;
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 0.92em;
+      color: #495057;
+    }
+    .demo-steps li:before {
+      content: counter(step) ". ";
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
     .method-list { list-style: none; padding: 0; }
     .method-list li {
       padding: 15px 0;
@@ -214,6 +252,8 @@
 
       /* Figure full width on phones */
       .figure-image { width: 100%; }
+      .demo-gif { width: 100%; }
+      .demo-steps { grid-template-columns: 1fr 1fr; }
 
       /* Single column authors on mobile */
       .authors { 
@@ -290,6 +330,20 @@
         <li><strong>Asynchronous Online Planning:</strong> VLM planners continuously reason in the background while controllers execute actions, dramatically reducing latency</li>
         <li><strong>Multi-Agent Extension:</strong> Scale to multiple agents with parameter-shared controllers and language-based coordination, no specialized MARL algorithms needed</li>
       </ul>
+    </section>
+
+    <section id="demo">
+      <h2>Demo</h2>
+      <div class="demo-wrap">
+        <img src="asset/demo_picopark.gif" alt="Two agents solving a Pico Park level with Instruct-to-Act" class="demo-gif"/>
+        <p class="demo-caption">Two agents in Pico Park. The text at the bottom is the instruction the VLM planner currently sends to the controller; the controller acts on it until it signals completion, then the planner sends the next one.</p>
+      </div>
+      <ol class="demo-steps">
+        <li>Blue crouches, pink jumps onto the ledge</li>
+        <li>Both push the block off the ledge</li>
+        <li>Move the block over the spikes</li>
+        <li>Cross on the block and get the key</li>
+      </ol>
     </section>
 
     <section id="citation">
